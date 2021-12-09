@@ -48,6 +48,15 @@ public class ShipModel {
         notifySubscribers();
     }
 
+    public boolean isContained(Ship ship) {
+        for (int i = 0; i < ship.displayXs.length; i++) {
+            if (!rect.contains(ship.displayXs[i], ship.displayYs[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void addSubscriber (ShipModelSubscriber aSub) {
         subscribers.add(aSub);
     }

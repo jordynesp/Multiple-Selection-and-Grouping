@@ -12,7 +12,7 @@ public class ShipController {
     double dX, dY;
 
     protected enum State {
-        READY, DRAGGING, CREATE_RECT, RESIZE_RECT;
+        READY, DRAGGING, CREATE_RECT, RESIZE_RECT
     }
 
     protected State currentState;
@@ -44,7 +44,7 @@ public class ShipController {
                             iModel.removeSelected(hit.get());
                         }
                         else {
-                            iModel.setSelected(hit.get());
+                            iModel.addSelected(hit.get());
                             if (iModel.getSelected().size() > 0) {
                                 currentState = State.DRAGGING;
                             }
@@ -54,7 +54,7 @@ public class ShipController {
                         // on ship, so select
                         if (!iModel.getSelected().contains(hit.get())) {
                             iModel.clearSelection();
-                            iModel.setSelected(hit.get());
+                            iModel.addSelected(hit.get());
                         }
                         currentState = State.DRAGGING;
                     }
@@ -64,7 +64,7 @@ public class ShipController {
                         // create ship
                         Ship newShip = model.createShip(x, y);
                         iModel.clearSelection();
-                        iModel.setSelected(newShip);
+                        iModel.addSelected(newShip);
                         currentState = State.DRAGGING;
                     } else {
                         // clear selection
@@ -100,14 +100,16 @@ public class ShipController {
 
     public void handleReleased(double x, double y, MouseEvent event) {
         switch (currentState) {
-            case DRAGGING -> {
+            case DRAGGING, CREATE_RECT -> {
                 currentState = State.READY;
             }
             case RESIZE_RECT -> {
+                for (Ship ship : model.ships) {
+                    if (model.isContained(ship)) {
+                        iModel.addSelected(ship);
+                    }
+                }
                 model.removeRect();
-                currentState = State.READY;
-            }
-            case CREATE_RECT -> {
                 currentState = State.READY;
             }
         }

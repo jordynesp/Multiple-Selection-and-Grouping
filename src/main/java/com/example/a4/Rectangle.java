@@ -1,7 +1,7 @@
 package com.example.a4;
 
 public class Rectangle {
-    double left,top,width,height;
+    double left,top,right,bottom;
     double startX,startY;
 
     public Rectangle(double x, double y) {
@@ -9,40 +9,18 @@ public class Rectangle {
         startY = y;
         left = x;
         top = y;
-        width = x;
-        height = y;
+        right = x;
+        bottom = y;
     }
 
     public void resize(double x, double y) {
-        left = startX;
-        top = startY;
-        width = x - startX;
-        height = y - startY;
-        if (width < 0) {
-            left = x;
-            width = startX - x;
-        }
-        if (height < 0) {
-            top = y;
-            height = startY - y;
-        }
-    }
-
-    public void move(double dX, double dY) {
-        left += dX;
-        width += dX;
-        startX += dX;
-        top += dY;
-        height += dY;
-        startY += dY;
+        left = Math.min(x, startX);
+        right = Math.max(x, startX);
+        top = Math.min(y, startY);
+        bottom = Math.max(y, startY);
     }
 
     public boolean contains(double x, double y) {
-        return x >= left && x <= width && y >= top && y <= height;
-    }
-
-    public void resetStartCoords() {
-        startX = left;
-        startY = top;
+        return x >= left && x <= right && y >= top && y <= bottom;
     }
 }

@@ -16,7 +16,7 @@ public class InteractionModel {
         notifySubscribers();
     }
 
-    public void setSelected(Ship newSelection) {
+    public void addSelected(Ship newSelection) {
         if (!selectedShips.contains(newSelection)) {
             selectedShips.add(newSelection);
         }
