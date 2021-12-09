@@ -6,6 +6,7 @@ import java.util.Optional;
 public class ShipModel {
     public ArrayList<Ship> ships;
     ArrayList<ShipModelSubscriber> subscribers;
+    Rectangle rect;
 
     public ShipModel() {
         subscribers = new ArrayList<>();
@@ -25,6 +26,25 @@ public class ShipModel {
 
     public void moveShip(Ship b, double dX, double dY) {
         b.moveShip(dX,dY);
+        notifySubscribers();
+    }
+
+    public Rectangle getRect() {
+        return rect;
+    }
+
+    public void createRect(double x, double y) {
+        rect = new Rectangle(x, y);
+        notifySubscribers();
+    }
+
+    public void resizeRect(double x, double y) {
+        rect.resize(x, y);
+        notifySubscribers();
+    }
+
+    public void removeRect() {
+        rect = null;
         notifySubscribers();
     }
 

@@ -12,7 +12,7 @@ public class ShipController {
     double dX, dY;
 
     protected enum State {
-        READY, DRAGGING
+        READY, DRAGGING, CREATE_RECT, RESIZE_RECT;
     }
 
     protected State currentState;
@@ -52,7 +52,10 @@ public class ShipController {
                     }
                     else {
                         // on ship, so select
-                        iModel.setSelected(hit.get());
+                        if (!iModel.getSelected().contains(hit.get())) {
+                            iModel.clearSelection();
+                            iModel.setSelected(hit.get());
+                        }
                         currentState = State.DRAGGING;
                     }
                 } else {
@@ -66,11 +69,12 @@ public class ShipController {
                     } else {
                         // clear selection
                         iModel.clearSelection();
-                        currentState = State.READY;
+                        currentState = State.CREATE_RECT;
                     }
                 }
             }
         }
+        System.out.println("Current state is: " + currentState);
     }
 
     public void handleDragged(double x, double y, MouseEvent event) {
@@ -82,7 +86,16 @@ public class ShipController {
            case DRAGGING -> {
                iModel.selectedShips.forEach(ship -> model.moveShip(ship, dX, dY));
            }
+            case CREATE_RECT -> {
+                model.createRect(x, y);
+                model.resizeRect(x, y);
+                currentState = State.RESIZE_RECT;
+            }
+            case RESIZE_RECT -> {
+               model.resizeRect(x, y);
+            }
         }
+        System.out.println("Current state is: " + currentState);
     }
 
     public void handleReleased(double x, double y, MouseEvent event) {
@@ -90,7 +103,15 @@ public class ShipController {
             case DRAGGING -> {
                 currentState = State.READY;
             }
+            case RESIZE_RECT -> {
+                model.removeRect();
+                currentState = State.READY;
+            }
+            case CREATE_RECT -> {
+                currentState = State.READY;
+            }
         }
+        System.out.println("Current state is: " + currentState);
     }
 
     public void handleKeyPressed(KeyEvent keyEvent) {
