@@ -12,7 +12,7 @@ public class ShipController {
     double dX, dY;
 
     protected enum State {
-        READY, DRAGGING, CREATE_RECT, RESIZE_RECT
+        READY, DRAGGING, CREATE_RECT, RESIZE_RECT, CREATE_CTRL_RECT, RESIZE_CTRL_RECT
     }
 
     protected State currentState;
@@ -66,6 +66,10 @@ public class ShipController {
                         iModel.clearSelection();
                         iModel.addSelected(newShip);
                         currentState = State.DRAGGING;
+                    }
+                    // on background - is Control down?
+                    else if (event.isControlDown()) {
+                        currentState = State.CREATE_CTRL_RECT;
                     } else {
                         // clear selection
                         iModel.clearSelection();
@@ -91,8 +95,13 @@ public class ShipController {
                 model.resizeRect(x, y);
                 currentState = State.RESIZE_RECT;
             }
-            case RESIZE_RECT -> {
+            case RESIZE_RECT, RESIZE_CTRL_RECT -> {
                model.resizeRect(x, y);
+            }
+            case CREATE_CTRL_RECT -> {
+               model.createRect(x, y);
+               model.resizeRect(x, y);
+               currentState = State.RESIZE_CTRL_RECT;
             }
         }
         System.out.println("Current state is: " + currentState);
@@ -107,6 +116,20 @@ public class ShipController {
                 for (Ship ship : model.ships) {
                     if (model.isContained(ship)) {
                         iModel.addSelected(ship);
+                    }
+                }
+                model.removeRect();
+                currentState = State.READY;
+            }
+            case RESIZE_CTRL_RECT -> {
+                for (Ship ship : model.ships) {
+                    if (model.isContained(ship)) {
+                        if (iModel.getSelected().contains(ship)) {
+                            iModel.removeSelected(ship);
+                        }
+                        else {
+                            iModel.addSelected(ship);
+                        }
                     }
                 }
                 model.removeRect();
