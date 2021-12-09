@@ -37,14 +37,30 @@ public class ShipController {
                 // context: on a ship?
                 Optional<Ship> hit = model.detectHit(x, y);
                 if (hit.isPresent()) {
-                    // on ship, so select
-                    iModel.setSelected(hit.get());
-                    currentState = State.DRAGGING;
+                    // is control held down?
+                    if (event.isControlDown()) {
+                        // add/remove ship from selection
+                        if (iModel.getSelected().contains(hit.get())) {
+                            iModel.removeSelected(hit.get());
+                        }
+                        else {
+                            iModel.setSelected(hit.get());
+                            if (iModel.getSelected().size() > 0) {
+                                currentState = State.DRAGGING;
+                            }
+                        }
+                    }
+                    else {
+                        // on ship, so select
+                        iModel.setSelected(hit.get());
+                        currentState = State.DRAGGING;
+                    }
                 } else {
                     // on background - is Shift down?
                     if (event.isShiftDown()) {
                         // create ship
                         Ship newShip = model.createShip(x, y);
+                        iModel.clearSelection();
                         iModel.setSelected(newShip);
                         currentState = State.DRAGGING;
                     } else {
@@ -63,7 +79,9 @@ public class ShipController {
         prevX = x;
         prevY = y;
         switch (currentState) {
-           case DRAGGING -> model.moveShip(iModel.selectedShip, dX, dY);
+           case DRAGGING -> {
+               iModel.selectedShips.forEach(ship -> model.moveShip(ship, dX, dY));
+           }
         }
     }
 
