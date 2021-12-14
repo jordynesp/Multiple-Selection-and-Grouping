@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class InteractionModel {
     ArrayList<ShipModelSubscriber> subscribers;
-    ArrayList<Ship> selectedShips;
+    ArrayList<Groupable> selectedShips;
 
     public InteractionModel() {
         subscribers = new ArrayList<>();
@@ -16,19 +16,19 @@ public class InteractionModel {
         notifySubscribers();
     }
 
-    public void addSelected(Ship newSelection) {
+    public void addSelected(Groupable newSelection) {
         if (!selectedShips.contains(newSelection)) {
             selectedShips.add(newSelection);
         }
         notifySubscribers();
     }
 
-    public void removeSelected(Ship ship) {
+    public void removeSelected(Groupable ship) {
         selectedShips.remove(ship);
         notifySubscribers();
     }
 
-    public ArrayList<Ship> getSelected() {
+    public ArrayList<Groupable> getSelected() {
         return selectedShips;
     }
 

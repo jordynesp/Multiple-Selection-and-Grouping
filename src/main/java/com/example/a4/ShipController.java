@@ -35,7 +35,7 @@ public class ShipController {
         switch (currentState) {
             case READY -> {
                 // context: on a ship?
-                Optional<Ship> hit = model.detectHit(x, y);
+                Optional<Groupable> hit = model.detectHit(x, y);
                 if (hit.isPresent()) {
                     // is control held down?
                     if (event.isControlDown()) {
@@ -109,11 +109,15 @@ public class ShipController {
 
     public void handleReleased(double x, double y, MouseEvent event) {
         switch (currentState) {
-            case DRAGGING, CREATE_RECT -> {
+            case DRAGGING -> {
+                currentState = State.READY;
+            }
+            case CREATE_RECT, CREATE_CTRL_RECT -> {
+                iModel.clearSelection();
                 currentState = State.READY;
             }
             case RESIZE_RECT -> {
-                for (Ship ship : model.ships) {
+                for (Groupable ship : model.ships) {
                     if (model.isContained(ship)) {
                         iModel.addSelected(ship);
                     }
@@ -122,7 +126,7 @@ public class ShipController {
                 currentState = State.READY;
             }
             case RESIZE_CTRL_RECT -> {
-                for (Ship ship : model.ships) {
+                for (Groupable ship : model.ships) {
                     if (model.isContained(ship)) {
                         if (iModel.getSelected().contains(ship)) {
                             iModel.removeSelected(ship);

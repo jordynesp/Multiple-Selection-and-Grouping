@@ -5,10 +5,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.DoubleStream;
 
-public class Ship {
+public class Ship implements Groupable {
     double translateX, translateY;
     double[] xs = {0,20,0,-20,0};
     double[] ys = {24,-20,-12,-20,24};
@@ -51,6 +52,16 @@ public class Ship {
         }
     }
 
+    @Override
+    public boolean hasChildren() {
+        return false;
+    }
+
+    @Override
+    public ArrayList<Groupable> getChildren() {
+        return null;
+    }
+
     public boolean contains(double x, double y) {
         clickX = x - translateX + shipWidth/2;
         clickY = y - translateY + shipHeight/2;
@@ -62,7 +73,41 @@ public class Ship {
         return inside;
     }
 
-    public void moveShip(double dx, double dy) {
+    @Override
+    public double getLeft() {
+        return DoubleStream.of(displayXs).min().getAsDouble();
+    }
+
+    @Override
+    public double getRight() {
+        return DoubleStream.of(displayXs).max().getAsDouble();
+    }
+
+    @Override
+    public double getTop() {
+        return DoubleStream.of(displayYs).min().getAsDouble();
+    }
+
+    @Override
+    public double getBottom() {
+        return DoubleStream.of(displayYs).max().getAsDouble();
+    }
+
+    @Override
+    public Ship getShip() {
+        return this;
+    }
+
+    public boolean inRect(Rectangle rect) {
+        for (int i = 0; i < displayXs.length; i++) {
+            if (!rect.contains(displayXs[i], displayYs[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void move(double dx, double dy) {
         for (int i = 0; i < displayXs.length; i++) {
             displayXs[i] += dx;
             displayYs[i] += dy;

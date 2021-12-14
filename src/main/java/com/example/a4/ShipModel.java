@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public class ShipModel {
-    public ArrayList<Ship> ships;
+    public ArrayList<Groupable> ships;
     ArrayList<ShipModelSubscriber> subscribers;
     Rectangle rect;
 
@@ -20,17 +20,13 @@ public class ShipModel {
         return s;
     }
 
-    public Optional<Ship> detectHit(double x, double y) {
+    public Optional<Groupable> detectHit(double x, double y) {
         return ships.stream().filter(s -> s.contains(x, y)).reduce((first, second) -> second);
     }
 
-    public void moveShip(Ship b, double dX, double dY) {
-        b.moveShip(dX,dY);
+    public void moveShip(Groupable ship, double dX, double dY) {
+        ship.move(dX,dY);
         notifySubscribers();
-    }
-
-    public Rectangle getRect() {
-        return rect;
     }
 
     public void createRect(double x, double y) {
@@ -48,13 +44,8 @@ public class ShipModel {
         notifySubscribers();
     }
 
-    public boolean isContained(Ship ship) {
-        for (int i = 0; i < ship.displayXs.length; i++) {
-            if (!rect.contains(ship.displayXs[i], ship.displayYs[i])) {
-                return false;
-            }
-        }
-        return true;
+    public boolean isContained(Groupable ship) {
+        return ship.inRect(rect);
     }
 
     public void addSubscriber (ShipModelSubscriber aSub) {

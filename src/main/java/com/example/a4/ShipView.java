@@ -41,16 +41,22 @@ public class ShipView extends StackPane implements ShipModelSubscriber {
                     model.rect.right-model.rect.left, model.rect.bottom-model.rect.top);
         }
         model.ships.forEach(ship -> {
-            if (iModel.getSelected() != null && iModel.getSelected().contains(ship)) {
-                gc.setFill(Color.YELLOW);
-                gc.setStroke(Color.CORAL);
-            } else {
-                gc.setStroke(Color.YELLOW);
-                gc.setFill(Color.CORAL);
+            if (!ship.hasChildren()) {
+                drawShip(ship.getShip());
             }
-            gc.fillPolygon(ship.displayXs, ship.displayYs, ship.displayXs.length);
-            gc.strokePolygon(ship.displayXs, ship.displayYs, ship.displayXs.length);
         });
+    }
+
+    private void drawShip(Ship ship) {
+        if (iModel.getSelected() != null && iModel.getSelected().contains(ship)) {
+            gc.setFill(Color.YELLOW);
+            gc.setStroke(Color.CORAL);
+        } else {
+            gc.setStroke(Color.YELLOW);
+            gc.setFill(Color.CORAL);
+        }
+        gc.fillPolygon(ship.displayXs, ship.displayYs, ship.displayXs.length);
+        gc.strokePolygon(ship.displayXs, ship.displayYs, ship.displayXs.length);
     }
 
     @Override
