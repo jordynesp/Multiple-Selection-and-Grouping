@@ -44,6 +44,14 @@ public class ShipModel {
         notifySubscribers();
     }
 
+    public ShipGroup group(ArrayList<Groupable> selection) {
+        ShipGroup newGroup = new ShipGroup();
+        selection.forEach(newGroup::addChild);
+        newGroup.getChildren().forEach(ship -> ships.remove(ship));
+        ships.add(newGroup);
+        return newGroup;
+    }
+
     public boolean isContained(Groupable ship) {
         return ship.inRect(rect);
     }
@@ -53,6 +61,6 @@ public class ShipModel {
     }
 
     private void notifySubscribers() {
-        subscribers.forEach(sub -> sub.modelChanged());
+        subscribers.forEach(ShipModelSubscriber::modelChanged);
     }
 }

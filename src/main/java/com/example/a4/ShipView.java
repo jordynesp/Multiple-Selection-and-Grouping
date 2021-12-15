@@ -44,19 +44,39 @@ public class ShipView extends StackPane implements ShipModelSubscriber {
             if (!ship.hasChildren()) {
                 drawShip(ship.getShip());
             }
+            else {
+                if (iModel.getSelected() != null && iModel.getSelected().contains(ship)) {
+                    gc.setStroke(Color.WHITE);
+                    gc.strokeRect(ship.getLeft(), ship.getTop(),
+                            ship.getRight() - ship.getLeft(), ship.getBottom() - ship.getTop());
+                }
+                drawGroup(ship);
+            }
         });
+        iModel.getSelectedShips().forEach(this::drawSelectedShip);
     }
 
     private void drawShip(Ship ship) {
-        if (iModel.getSelected() != null && iModel.getSelected().contains(ship)) {
-            gc.setFill(Color.YELLOW);
-            gc.setStroke(Color.CORAL);
-        } else {
-            gc.setStroke(Color.YELLOW);
-            gc.setFill(Color.CORAL);
-        }
+        gc.setStroke(Color.YELLOW);
+        gc.setFill(Color.CORAL);
         gc.fillPolygon(ship.displayXs, ship.displayYs, ship.displayXs.length);
         gc.strokePolygon(ship.displayXs, ship.displayYs, ship.displayXs.length);
+    }
+
+    private void drawSelectedShip(Ship ship) {
+        gc.setFill(Color.YELLOW);
+        gc.setStroke(Color.CORAL);
+        gc.fillPolygon(ship.displayXs, ship.displayYs, ship.displayXs.length);
+        gc.strokePolygon(ship.displayXs, ship.displayYs, ship.displayXs.length);
+    }
+
+    private void drawGroup(Groupable group) {
+        if (!group.hasChildren()) {
+            drawShip(group.getShip());
+        }
+        else {
+            group.getChildren().forEach(this::drawGroup);
+        }
     }
 
     @Override

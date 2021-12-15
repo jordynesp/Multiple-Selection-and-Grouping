@@ -1,5 +1,6 @@
 package com.example.a4;
 
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
@@ -145,5 +146,16 @@ public class ShipController {
 
     public void handleKeyPressed(KeyEvent keyEvent) {
         System.out.println(keyEvent.getCode());
+        if (keyEvent.getCode().equals(KeyCode.G)) {
+            handleGroup();
+        }
+    }
+
+    private void handleGroup() {
+        if (iModel.getSelected().size() > 1) {
+            ShipGroup newGroup = model.group(iModel.getSelected());
+            iModel.clearSelection();
+            iModel.addSelected(newGroup);
+        }
     }
 }

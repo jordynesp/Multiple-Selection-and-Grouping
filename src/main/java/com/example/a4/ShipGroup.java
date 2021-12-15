@@ -36,7 +36,6 @@ public class ShipGroup implements Groupable {
         updateBounds();
     }
 
-
     @Override
     public double getLeft() {
         ArrayList<Double> lefts = new ArrayList<>();
@@ -57,7 +56,20 @@ public class ShipGroup implements Groupable {
 
     @Override
     public double getRight() {
-        return 0;
+        ArrayList<Double> rights = new ArrayList<>();
+        getRightHelper(rights, children);
+        return rights.stream().max(Double::compare).get();
+    }
+
+    private void getRightHelper(ArrayList<Double> rights, ArrayList<Groupable> groups) {
+        for (Groupable child : groups) {
+            if (!child.hasChildren()) {
+                rights.add(child.getRight());
+            }
+            else {
+                getRightHelper(rights, child.getChildren());
+            }
+        }
     }
 
     @Override
@@ -80,7 +92,20 @@ public class ShipGroup implements Groupable {
 
     @Override
     public double getBottom() {
-        return 0;
+        ArrayList<Double> bottoms = new ArrayList<>();
+        getBottomHelper(bottoms, children);
+        return bottoms.stream().max(Double::compare).get();
+    }
+
+    private void getBottomHelper(ArrayList<Double> bottoms, ArrayList<Groupable> groups) {
+        for (Groupable child : groups) {
+            if (!child.hasChildren()) {
+                bottoms.add(child.getBottom());
+            }
+            else {
+                getBottomHelper(bottoms, child.getChildren());
+            }
+        }
     }
 
     @Override
@@ -95,5 +120,8 @@ public class ShipGroup implements Groupable {
 
     private void updateBounds() {
         left = getLeft();
+        top = getTop();
+        right = getRight();
+        bottom = getBottom();
     }
 }
