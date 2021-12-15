@@ -10,7 +10,7 @@ To run the ShipDemo, navigate to:
 and run the main() function.
 
 Organization:
-- all src files are found withinthe com.example.a4 package
+- all src files are found within the com.example.a4 package
 
 Notes:
 - only the first two parts of the assignment were implemented, however,
