@@ -80,7 +80,6 @@ public class ShipController {
                 }
             }
         }
-        System.out.println("Current state is: " + currentState);
     }
 
     public void handleDragged(double x, double y, MouseEvent event) {
@@ -106,7 +105,6 @@ public class ShipController {
                currentState = State.RESIZE_CTRL_RECT;
             }
         }
-        System.out.println("Current state is: " + currentState);
     }
 
     public void handleReleased(double x, double y, MouseEvent event) {
@@ -142,7 +140,6 @@ public class ShipController {
                 currentState = State.READY;
             }
         }
-        System.out.println("Current state is: " + currentState);
     }
 
     public void handleKeyPressed(KeyEvent keyEvent) {
