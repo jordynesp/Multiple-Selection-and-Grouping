@@ -4,6 +4,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class ShipController {
@@ -149,6 +150,9 @@ public class ShipController {
         if (keyEvent.getCode().equals(KeyCode.G)) {
             handleGroup();
         }
+        else if (keyEvent.getCode().equals(KeyCode.U)) {
+            handleUngroup();
+        }
     }
 
     private void handleGroup() {
@@ -156,6 +160,14 @@ public class ShipController {
             ShipGroup newGroup = model.group(iModel.getSelected());
             iModel.clearSelection();
             iModel.addSelected(newGroup);
+        }
+    }
+
+    private void handleUngroup() {
+        if (iModel.getSelected().size() == 1 && iModel.getSelected().stream().findFirst().get().hasChildren()) {
+            ArrayList<Groupable> ungrouped = model.ungroup(iModel.getSelected().stream().findFirst().get());
+            iModel.clearSelection();
+            ungrouped.forEach(child -> iModel.addSelected(child));
         }
     }
 }

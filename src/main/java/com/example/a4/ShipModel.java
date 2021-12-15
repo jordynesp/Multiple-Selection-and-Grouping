@@ -52,6 +52,12 @@ public class ShipModel {
         return newGroup;
     }
 
+    public ArrayList<Groupable> ungroup(Groupable group) {
+        ships.remove(group);
+        ships.addAll(group.getChildren());
+        return new ArrayList<>(group.getChildren());
+    }
+
     public boolean isContained(Groupable ship) {
         return ship.inRect(rect);
     }
